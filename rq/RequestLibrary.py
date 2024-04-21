@@ -6,7 +6,8 @@ from rq.Cellular import Cellular
 from rq.CellularSignal import CellularSignal
 from rq.CellularType import CellularType
 from rq.common import common_headers, auth_state_url, device_url, cellular_url, rsrp_url, status_url, network_type_url, \
-    set_cellular_mode_url, network_mode_url, reboot_url, cellular_interface_5g_url, cellular_interface_url
+    set_cellular_mode_url, network_mode_url, reboot_url, cellular_interface_5g_url, cellular_interface_url, \
+    connected_device_24_url, connected_device_5_url
 from rq.Device import Device
 from rq.filter_fields import filter_fields
 from rq.login import do_login
@@ -156,10 +157,36 @@ def post_reboot():
         raise RebootError("Failed to set cellular mode")
 
 
+def get_connected_device_list() -> List[str]:
+    connected_devices = []
+    resp_24 = _common_request_sender(connected_device_24_url)
+    _check_status_code(resp_24, "connected devices 2.4G")
+    result_24 = json.loads(resp_24.text)
+    try:
+        devices_24 = result_24[0]["hosts"]["list"]
+    except KeyError:
+        raise ResponseFormatError("Response format error, check the response format for connected devices 2.4G response")
+    for device in devices_24:
+        connected_devices.append(device["macaddress"])
+
+    resp_5 = _common_request_sender(connected_device_5_url)
+    _check_status_code(resp_5, "connected devices 5G")
+    result_5 = json.loads(resp_5.text)
+    try:
+        devices_5 = result_5[0]["hosts"]["list"]
+    except KeyError:
+        raise ResponseFormatError("Response format error, check the response format for connected devices 5G response")
+    for device in devices_5:
+        connected_devices.append(device["macaddress"])
+
+    return connected_devices
+
+
 if __name__ == '__main__':
     do_login("admin", "password")
     # put_network_mode(CellularType.t_5G_NSA)
-
+    print(get_connected_device_list())
+    exit(0)
     print(list(get_devices()))
     exit(0)
     print(get_cellular_interface_signal(CellularType.t_5G_NSA))

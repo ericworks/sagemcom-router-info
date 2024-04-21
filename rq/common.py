@@ -24,3 +24,5 @@ reboot_url = "http://192.168.1.1/api/v1/device/reboot"
 cellular_interface_url = "http://192.168.1.1/api/v1/cellular/interface"
 cellular_interface_5g_url = "http://192.168.1.1/api/v1/cellular/interface_5g"
 
+connected_device_24_url = "http://192.168.1.1/api/v1/wireless/assoclist24"
+connected_device_5_url = "http://192.168.1.1/api/v1/wireless/assoclist5"

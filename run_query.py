@@ -9,7 +9,7 @@ from rq.CellularSignal import CellularSignal
 from rq.CellularType import CellularType
 from rq.Device import Device
 from rq.RequestLibrary import get_devices, get_signal_power, get_cellular_session_info, is_wan_up, \
-    get_display_network_type, get_internal_network_mode, get_cellular_interface_signal
+    get_display_network_type, get_internal_network_mode, get_cellular_interface_signal, get_connected_device_list
 from rq.SpeedTestResult import SpeedTestResult
 from sqlite_connector import DatabaseConnectionService
 from test_speed import get_speedtest_result
@@ -44,6 +44,10 @@ def run(should_test_speed: bool = False):
 
     c_signal: CellularSignal = get_cellular_interface_signal(CellularType.t_4G)
     DatabaseConnectionService.get_instance().add_cellular_interface_signal(ts, c_signal, CellularType.t_4G.value)
+
+    connected_devices: List[str] = get_connected_device_list()
+    for device in connected_devices:
+        DatabaseConnectionService.get_instance().add_connected_device(ts, device)
 
     if not should_test_speed:
         return

@@ -68,6 +68,23 @@ CREATE TABLE IF NOT EXISTS "speed_test" (
 	"server_city"	TEXT
 	
 );
+CREATE TABLE IF NOT EXISTS "connected_devices" (
+    "timestamp" INTEGER NOT NULL,
+    "macaddress" TEXT
+);
+CREATE TABLE IF NOT EXISTS "ownership" (
+    "macaddress" TEXT,
+    "owner" TEXT
+);
+CREATE INDEX IF NOT EXISTS "idx_owner_mac" ON "ownership" (
+    "macaddress"
+);
+CREATE INDEX IF NOT EXISTS "idx_connected_devices_ts" ON "connected_devices" (
+    "timestamp"
+);
+CREATE INDEX IF NOT EXISTS "idx_connected_devices_mac" ON "connected_devices" (
+    "macaddress"
+);
 CREATE INDEX IF NOT EXISTS "idx_device_ts" ON "device" (
 	"timestamp"
 );

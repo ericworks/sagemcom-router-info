@@ -70,3 +70,6 @@ class DatabaseConnectionService:
                              r.client.get("ip", ""), r.server.get("sponsor", ""), r.server.get("name", "")))
         self.connection.commit()
 
+    def add_connected_device(self, timestamp: int, device_mac: str):
+        self.cursor.execute("INSERT INTO connected_devices (timestamp, macaddress) VALUES (?, ?)", (timestamp, device_mac))
+        self.connection.commit()
